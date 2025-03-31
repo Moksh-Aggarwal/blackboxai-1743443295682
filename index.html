@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Traffic Control Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    async function updateDetection() {
+      const response = await fetch('http://localhost:5000/api/detect');
+      const data = await response.json();
+      
+      // Update counts display
+      Object.entries(data.counts).forEach(([direction, count]) => {
+        document.getElementById(`${direction}-count`).textContent = count;
+      });
+      
+      // Update signal durations
+      Object.entries(data.durations).forEach(([direction, duration]) => {
+        document.getElementById(`${direction}-duration`).textContent = `${duration}s`;
+      });
+      
+      setTimeout(updateDetection, 2000); // Refresh every 2 seconds
+    }
+    
+    document.addEventListener('DOMContentLoaded', updateDetection);
+  </script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <nav class="bg-white shadow-lg p-4">
+    <div class="flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-blue-600">Traffic Control Dashboard</h1>
+      <div class="space-x-4">
+        <a href="/control.html" class="px-3 py-2 rounded hover:bg-blue-100">Control Panel</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="p-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Vehicle Counts -->
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-semibold mb-4">Vehicle Counts</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="p-3 border rounded">
+            <h3 class="font-medium">North</h3>
+            <p class="text-3xl font-bold" id="north-count">0</p>
+          </div>
+          <div class="p-3 border rounded">
+            <h3 class="font-medium">East</h3>
+            <p class="text-3xl font-bold" id="east-count">0</p>
+          </div>
+          <div class="p-3 border rounded">
+            <h3 class="font-medium">South</h3>
+            <p class="text-3xl font-bold" id="south-count">0</p>
+          </div>
+          <div class="p-3 border rounded">
+            <h3 class="font-medium">West</h3>
+            <p class="text-3xl font-bold" id="west-count">0</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Signal Durations -->
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h2 class="text-xl font-semibold mb-4">Signal Durations</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="p-3 border rounded">
+            <h3 class="font-medium">North</h3>
+            <p class="text-3xl font-bold" id="north-duration">15s</p>
+          </div>
+          <div class="p-3 border rounded">
+            <h3 class="font-medium">East</h3>
+            <p class="text-3xl font-bold" id="east-duration">15s</p>
+          </div>
+          <div class="p-3 border rounded">
+            <h3 class="font-medium">South</h3>
+            <p class="text-3xl font-bold" id="south-duration">15s</p>
+          </div>
+          <div class="p-3 border rounded">
+            <h3 class="font-medium">West</h3>
+            <p class="text-3xl font-bold" id="west-duration">15s</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
